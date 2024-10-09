@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Paperform Skjulte Felt Demo</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/js-cookie/3.0.1/js.cookie.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; }
+        form { background: #f9f9f9; padding: 20px; border-radius: 8px; }
+        label { display: block; margin-top: 10px; }
+        input[type="text"], input[type="email"], input[type="submit"] { width: 100%; padding: 8px; margin-top: 5px; }
+        input[type="submit"] { background: #4CAF50; color: white; border: none; cursor: pointer; }
+    </style>
+</head>
+<body>
+    <h1>Kontaktskjema med Skjulte Felt</h1>
+    <form id="demoForm">
+        <label for="name">Navn:</label>
+        <input type="text" id="name" name="name" required>
+        
+        <label for="email">E-post:</label>
+        <input type="email" id="email" name="email" required>
+        
+        <input type="hidden" id="session_id" name="session_id">
+        <input type="hidden" id="referrer" name="referrer">
+        <input type="hidden" id="screen_size" name="screen_size">
+        <input type="hidden" id="visit_count" name="visit_count">
+        
+        <input type="submit" value="Send inn">
+    </form>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Generer en enkel sesjons-ID
+            const sessionId = 'sess_' + Math.random().toString(36).substr(2, 9);
+            document.getElementById('session_id').value = sessionId;
+
+            // Lagre referrer
+            document.getElementById('referrer').value = document.referrer;
+
+            // Lagre skjermstørrelse
+            document.getElementById('screen_size').value = `${window.screen.width}x${window.screen.height}`;
+
+            // Håndter besøksteller
+            let visitCount = Cookies.get('visit_count') || 0;
+            visitCount = parseInt(visitCount) + 1;
+            Cookies.set('visit_count', visitCount, { expires: 7 });
+            document.getElementById('visit_count').value = visitCount;
+
+            // Vis skjulte verdier i konsollen ved innsending
+            document.getElementById('demoForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                console.log('Skjema sendt inn med følgende skjulte verdier:');
+                console.log('Sesjons-ID:', document.getElementById('session_id').value);
+                console.log('Referrer:', document.getElementById('referrer').value);
+                console.log('Skjermstørrelse:', document.getElementById('screen_size').value);
+                console.log('Besøksteller:', document.getElementById('visit_count').value);
+                alert('Skjema sendt inn! Sjekk konsollen for skjulte verdier.');
+            });
+        });
+    </script>
+</body>
+</html>
